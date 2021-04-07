@@ -6,7 +6,7 @@ global:
 #   imageRegistry: myRegistryName
 #   imagePullSecrets:
 #     - myRegistryKeySecretName
-  storageClass: openebs-jiva-default
+  storageClass: openebs-hostpath
 
 ## Bitnami MongoDB(R) Sharded image version
 ## ref: https://hub.docker.com/r/bitnami/mongodb-sharded/tags/
@@ -14,7 +14,7 @@ global:
 image:
   registry: docker.io
   repository: bitnami/mongodb-sharded
-  tag: 4.4.4-debian-10-r34
+  tag: 4.4.5-debian-10-r0
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -142,7 +142,8 @@ shardsvr:
     ## Node labels for pod assignment
     ## ref: https://kubernetes.io/docs/user-guide/node-selection/
     ##
-    nodeSelector: {}
+    nodeSelector:
+       nodeType: shard
     ## Tolerations for pod assignment
     ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
     ##
@@ -416,12 +417,12 @@ shardsvr:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "openebs-jiva-default"
+    storageClass: "openebs-hostpath"
     accessModes:
       - ReadWriteOnce
     ## PersistentVolumeClaim size
     ##
-    size: 8Gi
+    size: 2.5Gi
     ## Additional volume annotations
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
     ##
@@ -493,7 +494,8 @@ configsvr:
   ## Node labels for pod assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    nodeType: config-server
   ## Tolerations for pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
@@ -597,12 +599,12 @@ configsvr:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "openebs-jiva-default"
+    storageClass: "openebs-hostpath"
     accessModes:
       - ReadWriteOnce
     ## PersistentVolumeClaim size
     ##
-    size: 8Gi
+    size: 2.5Gi
     ## Additional volume annotations
     ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
     ##
@@ -701,7 +703,8 @@ mongos:
   ## Node labels for pod assignment
   ## ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
-  nodeSelector: {}
+  nodeSelector:
+    nodeType: mongos
   ## Tolerations for pod assignment
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
@@ -925,7 +928,7 @@ clusterDomain: cluster.local
 service:
   ## Specify an explicit service name
   ##
-  name:
+  name: mongodb-sharded
   ## Additional service annotations (evaluate as a template)
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   ##
@@ -1000,7 +1003,7 @@ metrics:
   image:
     registry: docker.io
     repository: bitnami/mongodb-exporter
-    tag: 0.11.2-debian-10-r113
+    tag: 0.11.2-debian-10-r131
     pullPolicy: Always
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.

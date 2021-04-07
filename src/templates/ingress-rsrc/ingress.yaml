@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: 
+  annotations: 
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: mongodb-ingress-resource
+spec: 
+  rules: 
+    - 
+      host: mongodb.cocreate.com
+      http:
+        paths:
+          - backend:
+                service:
+                  name: {{ .Values.service.name }}
+                  port:
+                    number: {{ .Values.service.port }}
+            pathType: ImplementationSpecific
