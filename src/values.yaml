@@ -893,6 +893,8 @@ common:
 ## Init containers parameters:
 ## volumePermissions: Change the owner and group of the persistent volume mountpoint to runAsUser:fsGroup values from the securityContext section.
 ##
+# this should be changed 
+# volume permssions are added to the deployment
 volumePermissions:
   enabled: true
   image:
