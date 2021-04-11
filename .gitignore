@@ -2,3 +2,6 @@ package-lock.json
 /node_modules
 *dry-run.yaml
 todos.todo
+extras
+tests.todo
+debugs.todo

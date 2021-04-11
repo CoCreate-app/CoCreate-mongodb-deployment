@@ -42,13 +42,13 @@ createns:
 deletens:
 	kubectl delete ns $(ns)
 install-remote:
-	helm install $(release) bitnami/mongodb-sharded --namespace=$(ns) --skip-crds --debug | cat > $(release)-dry-run.yaml
+	helm install $(release) bitnami/mongodb-sharded --namespace=$(ns) --debug | cat > $(release)-dry-run.yaml
 install:
-	helm install $(release) $(lpath) --namespace=$(ns) --skip-crds --debug | cat > $(release)-dry-run.yaml
+	helm install $(release) $(lpath) --namespace=$(ns) --debug | cat > $(release)-dry-run.yaml
 debug:
 	helm template --name-template=$(release) $(lpath) | cat > $(release).dry-run.yaml
 uninstall:
-	helm uninstall $(release) && $(MAKE) clean
+	helm uninstall $(release) --namespace=$(ns)  && $(MAKE) clean
 clean:
-	rm -r *dry-run.yaml && $(MAKE) deletens
+	rm -r *dry-run.yaml
 # && deletens

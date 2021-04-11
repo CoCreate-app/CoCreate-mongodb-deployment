@@ -6,7 +6,7 @@ global:
 #   imageRegistry: myRegistryName
 #   imagePullSecrets:
 #     - myRegistryKeySecretName
-  storageClass: openebs-hostpath
+  storageClass: mayastor-iscsi
 
 ## Bitnami MongoDB(R) Sharded image version
 ## ref: https://hub.docker.com/r/bitnami/mongodb-sharded/tags/
@@ -417,7 +417,7 @@ shardsvr:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "openebs-hostpath"
+    storageClass: "mayastor-iscsi"
     accessModes:
       - ReadWriteOnce
     ## PersistentVolumeClaim size
@@ -599,7 +599,7 @@ configsvr:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "openebs-hostpath"
+    storageClass: "mayastor-iscsi"
     accessModes:
       - ReadWriteOnce
     ## PersistentVolumeClaim size
@@ -894,7 +894,7 @@ common:
 ## volumePermissions: Change the owner and group of the persistent volume mountpoint to runAsUser:fsGroup values from the securityContext section.
 ##
 volumePermissions:
-  enabled: false
+  enabled: true
   image:
     registry: docker.io
     repository: bitnami/bitnami-shell
@@ -981,14 +981,14 @@ service:
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
 ##
 livenessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 60
   periodSeconds: 10
   timeoutSeconds: 5
   failureThreshold: 6
   successThreshold: 1
 readinessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 60
   periodSeconds: 10
   timeoutSeconds: 5
