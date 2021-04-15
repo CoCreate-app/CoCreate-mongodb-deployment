@@ -31,3 +31,7 @@ $ make install
 ```bash
 $ make uninstall release=yourrelase
 ```
+
+
+### Test
+kubectl port-forward mongodb-sharded-shard0-data-0  27017:27017

@@ -47,7 +47,7 @@ fullnameOverride:
 ##
 ## mongodbRootPassword: password
 ##
-mongodbRootPassword:
+mongodbRootPassword: root
 
 ## Replica Set key (shared for shards and config servers)
 ## ref:
@@ -938,7 +938,8 @@ service:
   ## Service type
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
   ##
-  type: ClusterIP
+  # type: ClusterIP
+  type: NodePort
   ## External traffic policy
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
   ##
