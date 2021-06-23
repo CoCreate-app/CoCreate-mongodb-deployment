@@ -6,7 +6,9 @@ global:
 #   imageRegistry: myRegistryName
 #   imagePullSecrets:
 #     - myRegistryKeySecretName
-  storageClass: mayastor-iscsi
+  # storageClass: mayastor-iscsi
+  storageClass: hostpath
+  storageProvisionor: hostpath
 
 ## Bitnami MongoDB(R) Sharded image version
 ## ref: https://hub.docker.com/r/bitnami/mongodb-sharded/tags/
@@ -417,7 +419,7 @@ shardsvr:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "mayastor-iscsi"
+    storageClass: "hostpath"
     accessModes:
       - ReadWriteOnce
     ## PersistentVolumeClaim size
@@ -599,7 +601,7 @@ configsvr:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "mayastor-iscsi"
+    storageClass: "hostpath"
     accessModes:
       - ReadWriteOnce
     ## PersistentVolumeClaim size

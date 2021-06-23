@@ -45,10 +45,16 @@ install-remote:
 	helm install $(release) bitnami/mongodb-sharded --namespace=$(ns) --debug | cat > $(release)-dry-run.yaml
 install:
 	helm install $(release) $(lpath) --namespace=$(ns) --debug | cat > $(release)-dry-run.yaml
+upgrade:
+	helm upgrade $(release) $(lpath) --namespace=$(ns) --debug | cat > $(release)-dry-run.yaml	
 debug:
 	helm template --name-template=$(release) $(lpath) | cat > $(release).dry-run.yaml
 uninstall:
 	helm uninstall $(release) --namespace=$(ns)  && $(MAKE) clean
 clean:
 	rm -r *dry-run.yaml
+rke-yaml:
+	helm template --name-template=$(release) $(lpath) --namespace=$(ns) | cat > $(release).yaml
+provision-hostpath:
+	helm repo add rimusz https://charts.rimusz.net && helm repo update && helm upgrade --install hostpath-provisioner --namespace kube-system rimusz/hostpath-provisioner
 # && deletens
