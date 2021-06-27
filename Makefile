@@ -3,7 +3,7 @@
 ns ?= mongodb-sharded-ns
 lpath ?= ./src
 release ?= mongodb-sharded
-
+mrp ?= root
 
 red=$(shell tput setaf 1)
 green=$(shell tput setaf 2)
@@ -24,6 +24,7 @@ help:
 	 4)$(purple)lpath$(end): optional :local path for charts : make $/{target} lpath=localpath\n\
 	 5)$(purple)release$(end): optional : helm release name : make $/{target} release=name\n"
 	 5)$(purple)valuesFile$(end): optional : helm release name : make $/{target} valuesFile=filename\n"
+	 6)$(purple)mrp$(end): optional : helm release name : make $/{target} mrp=pasword\n"
 	 @printf "\n ------------> Examples <------------\n\
 	 1) $(green)make $/{target} ns=namespace lpath=./charts/ release=openebs$(end)\n\
 	 2) $(green)make $/{target} ns=namespace chart=chartname$(end)\n"
@@ -42,13 +43,19 @@ createns:
 deletens:
 	kubectl delete ns $(ns)
 install-remote:
-	helm install $(release) bitnami/mongodb-sharded --namespace=$(ns) --skip-crds --debug | cat > $(release)-dry-run.yaml
+	helm install $(release) bitnami/mongodb-sharded --namespace=$(ns) --debug | cat > $(release)-dry-run.yaml
 install:
-	helm install $(release) $(lpath) --namespace=$(ns) --skip-crds --debug | cat > $(release)-dry-run.yaml
+	helm install $(release) $(lpath) --namespace=$(ns) --set mongodbRootPassword=$(mrp)  --debug | cat > $(release)-dry-run.yaml
+upgrade:
+	helm upgrade $(release) $(lpath) --namespace=$(ns) --debug | cat > $(release)-dry-run.yaml	
 debug:
 	helm template --name-template=$(release) $(lpath) | cat > $(release).dry-run.yaml
 uninstall:
-	helm uninstall $(release) && $(MAKE) clean
+	helm uninstall $(release) --namespace=$(ns)  && $(MAKE) clean
 clean:
-	rm -r *dry-run.yaml && $(MAKE) deletens
+	rm -r *dry-run.yaml
+rke-yaml:
+	helm template --name-template=$(release) $(lpath) --namespace=$(ns) | cat > $(release).yaml
+provision-hostpath:
+	helm repo add rimusz https://charts.rimusz.net && helm repo update && helm upgrade --install hostpath-provisioner --namespace kube-system rimusz/hostpath-provisioner
 # && deletens
