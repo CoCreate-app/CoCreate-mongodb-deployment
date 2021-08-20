@@ -31,6 +31,10 @@ jobs:
           curl -LO https://dl.k8s.io/release/v1.20.0/bin/linux/amd64/kubectl
           chmod +x kubectl
 
+      - name: install make
+        run: |
+          sudo apt install make
+          
       - name: make provision-hostpath
         env:
           KUBECONFIG_FILE: ${{ secrets.MONGOKUBECONFIG }}
