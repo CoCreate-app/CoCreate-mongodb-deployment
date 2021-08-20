@@ -37,7 +37,7 @@ jobs:
           
       - name: install helm
         run: |
-          https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 -o get_helm.sh
+          sudo snap install helm --classic  
       #     curl https://baltocdn.com/helm/signing.asc
       #     sudo apt-key add
       #     sudo apt-get install apt-transport-https --yes echo "deb https://baltocdn.com/helm/stable/debian/ all main"
