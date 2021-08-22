@@ -1,0 +1,55 @@
+name: Automated Deployment
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      Version: ${{ github.event.inputs.Version }}
+      KUBECONFIG_FILE: ${{ secrets.MONGOKUBECONFIG }}
+      KUBECONFIG: kubeconfig
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Get kubectl
+        run: |
+          curl -LO https://dl.k8s.io/release/v1.20.0/bin/linux/amd64/kubectl
+          chmod +x kubectl
+
+      - name: install make
+        run: |
+          sudo apt install make
+          
+      - name: install helm
+        run: |
+          sudo snap install helm --classic  
+     
+      - name: make provision-hostpath
+        env:
+          KUBECONFIG_FILE: ${{ secrets.MONGOKUBECONFIG }}
+        run: |
+          make provision-hostpath
+      
+      - name: make rke-yaml
+        env:
+          KUBECONFIG_FILE: ${{ secrets.MONGOKUBECONFIG }}
+        run: |
+          make rke-yaml
+      
+      # - name: Save kubeconfig
+      #   env:
+      #     KUBECONFIG_FILE: ${{ secrets.MONGOKUBECONFIG }}
+      #   run: |
+      #     echo ${KUBECONFIG_FILE} | base64 -d  > ${KUBECONFIG}
+
+      # - name: Apply deployment
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB }}
+      #   run: |
+      #     sed -i "s/IMAGE_TAG/${Version}/g" manifests/mongodb-manifets.yaml
+      #     ./kubectl kustomize manifests/ | ./kubectl apply -f -
